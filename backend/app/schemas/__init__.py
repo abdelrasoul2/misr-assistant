@@ -13,6 +13,13 @@ from app.schemas.common import (
     PaginationParams,
     TimestampedSchema,
 )
+from app.schemas.source import (
+    SourceBase,
+    SourceCreate,
+    SourceRead,
+    SourceUpdate,
+    SourceVerify,
+)
 
 __all__ = [
     "BaseSchema",
@@ -24,5 +31,10 @@ __all__ = [
     "MessageResponse",
     "PaginatedResponse",
     "PaginationParams",
+    "SourceBase",
+    "SourceCreate",
+    "SourceRead",
+    "SourceUpdate",
+    "SourceVerify",
     "TimestampedSchema",
 ]
