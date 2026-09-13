@@ -19,3 +19,11 @@ class RequirementType(str, Enum):
     REQUIRED = "required"
     OPTIONAL = "optional"
     CONDITIONAL = "conditional"
+
+
+class QuestionType(str, Enum):
+    """Type of question used in the interactive checklist."""
+
+    BOOLEAN = "boolean"
+    SINGLE_CHOICE = "single_choice"
+    MULTIPLE_CHOICE = "multiple_choice"

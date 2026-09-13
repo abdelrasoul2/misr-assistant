@@ -1,10 +1,13 @@
 """ORM models for Misr Assistant."""
 from app.models.category import Category
-from app.models.enums import RequirementType, ServiceStatus
+from app.models.enums import QuestionType, RequirementType, ServiceStatus
 from app.models.fee import Fee
 from app.models.location import Location
 from app.models.requirement import Requirement
 from app.models.service import Service
+from app.models.service_alias import ServiceAlias
+from app.models.service_question import ServiceQuestion
+from app.models.service_question_option import ServiceQuestionOption
 from app.models.source import Source
 from app.models.step import Step
 
@@ -12,9 +15,13 @@ __all__ = [
     "Category",
     "Fee",
     "Location",
+    "QuestionType",
     "Requirement",
     "RequirementType",
     "Service",
+    "ServiceAlias",
+    "ServiceQuestion",
+    "ServiceQuestionOption",
     "ServiceStatus",
     "Source",
     "Step",

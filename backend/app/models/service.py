@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from app.models.fee import Fee
     from app.models.location import Location
     from app.models.requirement import Requirement
+    from app.models.service_alias import ServiceAlias
+    from app.models.service_question import ServiceQuestion
     from app.models.source import Source
     from app.models.step import Step
 
@@ -80,6 +82,15 @@ class Service(Base, IDMixin, TimestampMixin):
     locations: Mapped[list["Location"]] = relationship(
         back_populates="service",
         cascade="all, delete-orphan",
+    )
+    aliases: Mapped[list["ServiceAlias"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+    )
+    questions: Mapped[list["ServiceQuestion"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+        order_by="ServiceQuestion.sort_order",
     )
 
     def __repr__(self) -> str:
