@@ -2,8 +2,9 @@ import Link from "next/link";
 import PharaohPattern from "../patterns/PharaohPattern";
 
 const FOOTER_LINKS = {
-  quick: [
+    quick: [
     { href: "/", label: "الرئيسية" },
+    { href: "/sectors", label: "القطاعات" },
     { href: "/services", label: "الخدمات" },
     { href: "/offices", label: "المصالح" },
     { href: "/hotlines", label: "الطوارئ" },

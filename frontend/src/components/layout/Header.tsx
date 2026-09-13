@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const NAV_ITEMS = [
   { href: "/", label: "الرئيسية" },
+  { href: "/sectors", label: "القطاعات" },
   { href: "/services", label: "الخدمات" },
   { href: "/offices", label: "المصالح" },
   { href: "/hotlines", label: "الطوارئ" },
