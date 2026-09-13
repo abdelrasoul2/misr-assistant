@@ -60,7 +60,7 @@ export default function Sectors() {
                   className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm"
                   style={{ backgroundColor: (s.color ?? "#d4af37") + "20" }}
                 >
-                  {s.icon ?? "\U0001F3DB\uFE0F"}
+                  {s.icon ?? "🏛️"}
                 </div>
                 <div
                   className="text-xs px-2 py-1 rounded-full font-mono"

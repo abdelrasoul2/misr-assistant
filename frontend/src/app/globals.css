@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-egypt-red: #ce1126;
+  --color-egypt-red-dark: #8b0000;
+  --color-egypt-red-light: #e63946;
+  --color-egypt-white: #ffffff;
+  --color-egypt-black: #1a1a1a;
+
+  --color-pharaoh-gold: #d4af37;
+  --color-pharaoh-gold-light: #f4e4a8;
+  --color-pharaoh-gold-dark: #b8941f;
+  --color-pharaoh-blue: #1e40af;
+  --color-pharaoh-blue-light: #3b82f6;
+  --color-pharaoh-turquoise: #40e0d0;
+  --color-pharaoh-lapis: #1e3a8a;
+
+  --color-sand-50: #faf7f2;
+  --color-sand-100: #f5efe6;
+  --color-sand-200: #e8dcc8;
+  --color-sand-300: #d4c4a8;
+  --color-sand-400: #b8a384;
+
+  --color-brand-50: #fdf9ec;
+  --color-brand-100: #f9efc9;
+  --color-brand-200: #f4e4a8;
+  --color-brand-300: #e8d08a;
+  --color-brand-400: #d4af37;
+  --color-brand-500: #c19a2e;
+  --color-brand-600: #a88025;
+  --color-brand-700: #8b6620;
+
+  --font-display: "Cairo", system-ui, sans-serif;
+  --font-body: "Tajawal", "Cairo", system-ui, sans-serif;
+}
+
+html { font-family: var(--font-body); }
+
+body {
+  margin: 0;
+  background-color: #faf7f2;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(212,175,55,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(206,17,38,0.03) 0%, transparent 50%);
+  color: #1a1a1a;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+* { box-sizing: border-box; }
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f5efe6; }
+::-webkit-scrollbar-thumb { background: #d4c4a8; border-radius: 5px; border: 2px solid #f5efe6; }
+::-webkit-scrollbar-thumb:hover { background: #d4af37; }
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.float-anim { animation: float 4s ease-in-out infinite; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.6s ease-out; }

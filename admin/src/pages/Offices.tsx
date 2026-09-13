@@ -3,31 +3,34 @@ import Badge from "../components/ui/Badge";
 import Spinner from "../components/ui/Spinner";
 import PharaohPattern from "../components/patterns/PharaohPattern";
 import {
-  ENTITY_TYPE_LABELS,
-  type EntityType,
-} from "../features/entities/types";
-import { useEntities } from "../features/entities/hooks";
-import { useSectors } from "../features/sectors/hooks";
+  OFFICE_TYPE_LABELS,
+  type OfficeType,
+} from "../features/offices/types";
+import { useOffices } from "../features/offices/hooks";
+import { useGovernorates } from "../features/governorates/hooks";
 
-const ENTITY_TYPES: { key: EntityType | "all"; label: string }[] = [
+const OFFICE_TYPES: { key: OfficeType | "all"; label: string }[] = [
   { key: "all", label: "الكل" },
-  { key: "ministry", label: "وزارة" },
-  { key: "authority", label: "هيئة" },
-  { key: "agency", label: "مصلحة" },
-  { key: "council", label: "مجلس" },
+  { key: "civil_registry", label: "سجل مدني" },
+  { key: "traffic", label: "مرور" },
+  { key: "passport", label: "جوازات" },
+  { key: "real_estate", label: "شهر عقاري" },
+  { key: "tax", label: "ضرائب" },
+  { key: "court", label: "محكمة" },
+  { key: "notary", label: "توثيق" },
 ];
 
-export default function Entities() {
-  const [sectorId, setSectorId] = useState<number | undefined>();
-  const [entityType, setEntityType] = useState<EntityType | "all">("all");
+export default function Offices() {
+  const [govId, setGovId] = useState<number | undefined>();
+  const [officeType, setOfficeType] = useState<OfficeType | "all">("all");
 
-  const sectors = useSectors({ page: 1, page_size: 100 });
+  const governorates = useGovernorates({ page: 1, page_size: 100 });
 
-  const params: Record<string, unknown> = { page: 1, page_size: 100 };
-  if (sectorId) params.sector_id = sectorId;
-  if (entityType !== "all") params.entity_type = entityType;
+  const params: Record<string, unknown> = { page: 1, page_size: 200 };
+  if (govId) params.governorate_id = govId;
+  if (officeType !== "all") params.office_type = officeType;
 
-  const { data, isLoading, isError } = useEntities(params);
+  const { data, isLoading, isError } = useOffices(params);
 
   return (
     <div className="space-y-6">
@@ -38,15 +41,15 @@ export default function Entities() {
           <div className="flex-1 bg-egypt-black" />
         </div>
         <div className="relative px-6 py-6 flex items-center gap-4">
-          <span className="text-3xl">🏛️</span>
+          <span className="text-3xl">📍</span>
           <div>
             <h1 className="text-2xl md:text-3xl font-display font-extrabold">
               <span className="bg-gradient-to-l from-egypt-red-dark via-egypt-red to-pharaoh-gold-dark bg-clip-text text-transparent">
-                الجهات الحكومية
+                المكاتب الحكومية
               </span>
             </h1>
             <p className="text-sm text-gray-600 mt-0.5">
-              الوزارات، الهيئات، المصالح، المجالس
+              المكاتب والفروع الحكومية في مصر
             </p>
           </div>
         </div>
@@ -58,14 +61,14 @@ export default function Entities() {
           <span className="text-xs text-gray-500 px-2 font-semibold">
             النوع:
           </span>
-          {ENTITY_TYPES.map((t) => (
+          {OFFICE_TYPES.map((t) => (
             <button
               key={t.key}
               type="button"
-              onClick={() => setEntityType(t.key)}
+              onClick={() => setOfficeType(t.key)}
               className={[
                 "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-                entityType === t.key
+                officeType === t.key
                   ? "bg-gradient-to-l from-pharaoh-gold-light to-pharaoh-gold/50 text-egypt-black shadow-sm"
                   : "text-gray-600 hover:bg-sand-50",
               ].join(" ")}
@@ -77,34 +80,33 @@ export default function Entities() {
 
         <div className="flex items-center gap-2 flex-wrap bg-white rounded-xl border border-sand-200 p-2">
           <span className="text-xs text-gray-500 px-2 font-semibold">
-            القطاع:
+            المحافظة:
           </span>
           <button
             type="button"
-            onClick={() => setSectorId(undefined)}
+            onClick={() => setGovId(undefined)}
             className={[
               "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
-              sectorId === undefined
+              govId === undefined
                 ? "bg-gradient-to-l from-pharaoh-gold-light to-pharaoh-gold/50 text-egypt-black shadow-sm"
                 : "text-gray-600 hover:bg-sand-50",
             ].join(" ")}
           >
             الكل
           </button>
-          {sectors.data?.items.map((s) => (
+          {governorates.data?.items.map((g) => (
             <button
-              key={s.id}
+              key={g.id}
               type="button"
-              onClick={() => setSectorId(s.id)}
+              onClick={() => setGovId(g.id)}
               className={[
-                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5",
-                sectorId === s.id
+                "px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                govId === g.id
                   ? "bg-gradient-to-l from-pharaoh-gold-light to-pharaoh-gold/50 text-egypt-black shadow-sm"
                   : "text-gray-600 hover:bg-sand-50",
               ].join(" ")}
             >
-              <span>{s.icon}</span>
-              <span>{s.name}</span>
+              {g.name_ar}
             </button>
           ))}
         </div>
@@ -129,74 +131,50 @@ export default function Entities() {
                     <th className="px-4 py-3.5 text-right font-bold w-16">#</th>
                     <th className="px-4 py-3.5 text-right font-bold">الاسم</th>
                     <th className="px-4 py-3.5 text-right font-bold">النوع</th>
-                    <th className="px-4 py-3.5 text-right font-bold">Slug</th>
-                    <th className="px-4 py-3.5 text-right font-bold">الموقع</th>
+                    <th className="px-4 py-3.5 text-right font-bold">العنوان</th>
                     <th className="px-4 py-3.5 text-right font-bold">هاتف</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sand-100">
-                  {data.items.map((e) => (
-                    <tr
-                      key={e.id}
-                      className="hover:bg-sand-50/60 transition-colors"
-                    >
+                  {data.items.map((o) => (
+                    <tr key={o.id} className="hover:bg-sand-50/60 transition-colors">
                       <td className="px-4 py-3 text-gray-400 font-mono text-xs">
-                        {e.id}
+                        {o.id}
                       </td>
                       <td className="px-4 py-3">
                         <div className="font-semibold text-egypt-black">
-                          {e.name}
+                          {o.name}
                         </div>
-                        {e.short_name && (
+                        {o.city && (
                           <div className="text-xs text-gray-500">
-                            {e.short_name}
+                            {o.city} — {o.district}
                           </div>
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <Badge color="blue">
-                          {ENTITY_TYPE_LABELS[e.entity_type] || e.entity_type}
+                        <Badge color="gold">
+                          {OFFICE_TYPE_LABELS[o.office_type] || o.office_type}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3">
-                        <code className="text-xs bg-sand-100 px-2 py-1 rounded-md text-gray-700 border border-sand-200">
-                          {e.slug}
-                        </code>
-                      </td>
-                      <td className="px-4 py-3">
-                        {e.website ? (
-                          <a
-                            href={e.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-pharaoh-blue hover:text-pharaoh-lapis hover:underline text-xs"
-                            dir="ltr"
-                          >
-                            زيارة ←
-                          </a>
-                        ) : (
-                          <span className="text-gray-300">—</span>
-                        )}
+                      <td className="px-4 py-3 text-gray-600 text-xs max-w-xs">
+                        {o.address}
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-xs font-mono" dir="ltr">
-                        {e.phone || "—"}
+                        {o.phone || "—"}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-
             <div className="px-4 py-3 border-t border-sand-100 text-sm text-gray-600 text-center bg-sand-50/50">
-              إجمالي <strong>{data.total}</strong> جهة
+              إجمالي <strong>{data.total}</strong> عنصر
             </div>
           </>
         )}
 
         {!isLoading && !isError && data?.items?.length === 0 && (
-          <div className="p-6 text-center text-gray-500">
-            لا توجد نتائج مطابقة
-          </div>
+          <div className="p-6 text-center text-gray-500">لا توجد بيانات</div>
         )}
       </div>
     </div>

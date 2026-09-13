@@ -5,7 +5,9 @@ const navItems = [
   { to: "/", label: "لوحة القيادة", icon: "⚑", end: true },
   { to: "/sectors", label: "القطاعات", icon: "⚖️", end: false },
   { to: "/entities", label: "الجهات", icon: "🏛️", end: false },
+  { to: "/offices", label: "المكاتب", icon: "📍", end: false },
   { to: "/governorates", label: "المحافظات", icon: "🗺️", end: false },
+  { to: "/hotlines", label: "الطوارئ", icon: "🚨", end: false },
   { to: "/categories", label: "التصنيفات", icon: "𓀀", end: false },
   { to: "/sources", label: "المصادر", icon: "𓊹", end: false },
 ];

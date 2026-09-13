@@ -7,6 +7,8 @@ from app.api.v1 import (
     entities,
     governorates,
     health,
+    hotlines,
+    offices,
     sectors,
     sources,
 )
@@ -34,6 +36,8 @@ app.include_router(sources.router, prefix=settings.API_V1_PREFIX)
 app.include_router(sectors.router, prefix=settings.API_V1_PREFIX)
 app.include_router(governorates.router, prefix=settings.API_V1_PREFIX)
 app.include_router(entities.router, prefix=settings.API_V1_PREFIX)
+app.include_router(offices.router, prefix=settings.API_V1_PREFIX)
+app.include_router(hotlines.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/", tags=["root"])

@@ -13,11 +13,23 @@ from app.schemas.common import (
     PaginationParams,
     TimestampedSchema,
 )
+from app.schemas.emergency_hotline import (
+    EmergencyHotlineBase,
+    EmergencyHotlineCreate,
+    EmergencyHotlineRead,
+    EmergencyHotlineUpdate,
+)
 from app.schemas.government_entity import (
     GovernmentEntityBase,
     GovernmentEntityCreate,
     GovernmentEntityRead,
     GovernmentEntityUpdate,
+)
+from app.schemas.government_office import (
+    GovernmentOfficeBase,
+    GovernmentOfficeCreate,
+    GovernmentOfficeRead,
+    GovernmentOfficeUpdate,
 )
 from app.schemas.governorate import (
     GovernorateBase,
@@ -45,11 +57,19 @@ __all__ = [
     "CategoryCreate",
     "CategoryRead",
     "CategoryUpdate",
+    "EmergencyHotlineBase",
+    "EmergencyHotlineCreate",
+    "EmergencyHotlineRead",
+    "EmergencyHotlineUpdate",
     "ErrorResponse",
     "GovernmentEntityBase",
     "GovernmentEntityCreate",
     "GovernmentEntityRead",
     "GovernmentEntityUpdate",
+    "GovernmentOfficeBase",
+    "GovernmentOfficeCreate",
+    "GovernmentOfficeRead",
+    "GovernmentOfficeUpdate",
     "GovernorateBase",
     "GovernorateCreate",
     "GovernorateRead",

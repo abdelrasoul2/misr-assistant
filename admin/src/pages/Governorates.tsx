@@ -33,7 +33,7 @@ export default function Governorates() {
           <div className="flex-1 bg-egypt-black" />
         </div>
         <div className="relative px-6 py-6 flex items-center gap-4">
-          <span className="text-3xl">\U0001F5FA\uFE0F</span>
+          <span className="text-3xl">🗺️</span>
           <div>
             <h1 className="text-2xl md:text-3xl font-display font-extrabold">
               <span className="bg-gradient-to-l from-egypt-red-dark via-egypt-red to-pharaoh-gold-dark bg-clip-text text-transparent">
@@ -112,7 +112,7 @@ export default function Governorates() {
                     <td className="px-4 py-3 text-gray-500 text-xs font-mono" dir="ltr">
                       {g.latitude && g.longitude
                         ? parseFloat(g.latitude).toFixed(2) + ", " + parseFloat(g.longitude).toFixed(2)
-                        : "\u2014"}
+                        : "—"}
                     </td>
                   </tr>
                 ))}

@@ -4,6 +4,8 @@ from app.api.v1 import (
     entities,
     governorates,
     health,
+    hotlines,
+    offices,
     sectors,
     sources,
 )
@@ -13,6 +15,8 @@ __all__ = [
     "entities",
     "governorates",
     "health",
+    "hotlines",
+    "offices",
     "sectors",
     "sources",
 ]

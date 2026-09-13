@@ -1,5 +1,6 @@
 """ORM models for Misr Assistant."""
 from app.models.category import Category
+from app.models.emergency_hotline import EmergencyHotline
 from app.models.enums import (
     EntityType,
     HotlineType,
@@ -11,7 +12,9 @@ from app.models.enums import (
 from app.models.fee import Fee
 from app.models.governorate import Governorate
 from app.models.government_entity import GovernmentEntity
+from app.models.government_office import GovernmentOffice
 from app.models.location import Location
+from app.models.office_service import office_services
 from app.models.requirement import Requirement
 from app.models.sector import Sector
 from app.models.service import Service
@@ -23,10 +26,12 @@ from app.models.step import Step
 
 __all__ = [
     "Category",
+    "EmergencyHotline",
     "EntityType",
     "Fee",
     "Governorate",
     "GovernmentEntity",
+    "GovernmentOffice",
     "HotlineType",
     "Location",
     "OfficeType",
@@ -41,4 +46,5 @@ __all__ = [
     "ServiceStatus",
     "Source",
     "Step",
+    "office_services",
 ]
