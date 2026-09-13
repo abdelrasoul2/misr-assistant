@@ -1,4 +1,4 @@
-﻿# ===== Python =====
+# ===== Python =====
 __pycache__/
 *.py[cod]
 *$py.class
@@ -70,3 +70,10 @@ htmlcov/
 *.db
 *.sqlite
 *.sqlite3
+
+
+# ===== Local temp / test scratch files =====
+_smoke_test.*
+_temp.*
+_scratch.*
+*.tmp
