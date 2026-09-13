@@ -1,0 +1,3 @@
+﻿# Tests
+
+Integration & smoke tests.
