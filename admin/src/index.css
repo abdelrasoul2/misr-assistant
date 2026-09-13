@@ -1,59 +1,117 @@
 @import "tailwindcss";
 
 @theme {
-  /* ==== Misr Assistant Color Palette ==== */
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
-
+  /* ===== ألوان علم مصر ===== */
   --color-egypt-red: #ce1126;
+  --color-egypt-red-dark: #8b0000;
+  --color-egypt-red-light: #e63946;
   --color-egypt-white: #ffffff;
-  --color-egypt-black: #000000;
+  --color-egypt-black: #1a1a1a;
 
-  /* ==== Typography ==== */
-  --font-sans: "Cairo", "Tajawal", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  /* ===== ألوان فرعونية ===== */
+  --color-pharaoh-gold: #d4af37;
+  --color-pharaoh-gold-light: #f4e4a8;
+  --color-pharaoh-gold-dark: #b8941f;
+  --color-pharaoh-blue: #1e40af;
+  --color-pharaoh-blue-light: #3b82f6;
+  --color-pharaoh-turquoise: #40e0d0;
+  --color-pharaoh-lapis: #1e3a8a;
+
+  /* ===== ألوان رملية ===== */
+  --color-sand-50: #faf7f2;
+  --color-sand-100: #f5efe6;
+  --color-sand-200: #e8dcc8;
+  --color-sand-300: #d4c4a8;
+  --color-sand-400: #b8a384;
+
+  /* ===== Brand (يحل محل brand-*) ===== */
+  --color-brand-50: #fdf9ec;
+  --color-brand-100: #f9efc9;
+  --color-brand-200: #f4e4a8;
+  --color-brand-300: #e8d08a;
+  --color-brand-400: #d4af37;
+  --color-brand-500: #c19a2e;
+  --color-brand-600: #a88025;
+  --color-brand-700: #8b6620;
+  --color-brand-800: #6e4e18;
+  --color-brand-900: #4d360f;
+
+  /* ===== خطوط ===== */
+  --font-display: "Cairo", system-ui, sans-serif;
+  --font-body: "Tajawal", "Cairo", system-ui, sans-serif;
 }
 
-/* ==== Base ==== */
 html {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
 }
 
 body {
   margin: 0;
-  background-color: #f9fafb;
-  color: #111827;
-  font-family: var(--font-sans);
+  background-color: #faf7f2;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(206, 17, 38, 0.03) 0%, transparent 50%);
+  color: #1a1a1a;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* ==== RTL scrollbar fix ==== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f5efe6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #d4c4a8;
+  border-radius: 5px;
+  border: 2px solid #f5efe6;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #d4af37;
+}
+
+/* ===== زخارف فرعونية ===== */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #f4e4a8 25%,
+    #d4af37 50%,
+    #b8941f 75%,
+    #d4af37 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 6s infinite linear;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.float-anim {
+  animation: float 4s ease-in-out infinite;
 }
