@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cairo, Tajawal } from "next/font/google";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -42,7 +43,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ar" dir="rtl" className={cairo.variable + " " + tajawal.variable}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
