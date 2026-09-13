@@ -1,0 +1,23 @@
+﻿[project]
+name = "misr-assistant-backend"
+version = "0.1.0"
+description = "Misr Assistant Backend API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy>=2.0.35",
+    "alembic>=1.13.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.5.0",
+    "python-dotenv>=1.0.1",
+    "aiosqlite>=0.20.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
