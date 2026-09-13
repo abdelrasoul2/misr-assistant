@@ -23,6 +23,7 @@ from app.models.service_question import ServiceQuestion
 from app.models.service_question_option import ServiceQuestionOption
 from app.models.source import Source
 from app.models.step import Step
+from app.models.user import User
 
 __all__ = [
     "Category",
@@ -46,5 +47,6 @@ __all__ = [
     "ServiceStatus",
     "Source",
     "Step",
+    "User",
     "office_services",
 ]

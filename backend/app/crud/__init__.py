@@ -7,6 +7,7 @@ from app.crud.government_office import CRUDGovernmentOffice, government_office
 from app.crud.governorate import CRUDGovernorate, governorate
 from app.crud.sector import CRUDSector, sector
 from app.crud.source import CRUDSource, source
+from app.crud.user import CRUDUser, user
 
 __all__ = [
     "CRUDBase",
@@ -17,6 +18,7 @@ __all__ = [
     "CRUDGovernorate",
     "CRUDSector",
     "CRUDSource",
+    "CRUDUser",
     "category",
     "emergency_hotline",
     "government_entity",
@@ -24,4 +26,5 @@ __all__ = [
     "governorate",
     "sector",
     "source",
+    "user",
 ]

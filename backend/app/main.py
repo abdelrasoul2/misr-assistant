@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import (
+    auth,
     categories,
     entities,
     governorates,
@@ -31,6 +32,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router, prefix=settings.API_V1_PREFIX)
+app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
 app.include_router(categories.router, prefix=settings.API_V1_PREFIX)
 app.include_router(sources.router, prefix=settings.API_V1_PREFIX)
 app.include_router(sectors.router, prefix=settings.API_V1_PREFIX)

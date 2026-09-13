@@ -1,4 +1,12 @@
 """Pydantic schemas for the Misr Assistant API."""
+from app.schemas.auth import (
+    Token,
+    TokenWithUser,
+    UserBase,
+    UserLogin,
+    UserRead,
+    UserRegister,
+)
 from app.schemas.category import (
     CategoryBase,
     CategoryCreate,
@@ -87,4 +95,10 @@ __all__ = [
     "SourceUpdate",
     "SourceVerify",
     "TimestampedSchema",
+    "Token",
+    "TokenWithUser",
+    "UserBase",
+    "UserLogin",
+    "UserRead",
+    "UserRegister",
 ]

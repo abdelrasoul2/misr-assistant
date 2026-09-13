@@ -1,5 +1,6 @@
 """API v1 routers."""
 from app.api.v1 import (
+    auth,
     categories,
     entities,
     governorates,
@@ -11,6 +12,7 @@ from app.api.v1 import (
 )
 
 __all__ = [
+    "auth",
     "categories",
     "entities",
     "governorates",
