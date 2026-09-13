@@ -11,7 +11,11 @@ from app.models.enums import ServiceStatus
 
 if TYPE_CHECKING:
     from app.models.category import Category
+    from app.models.fee import Fee
+    from app.models.location import Location
+    from app.models.requirement import Requirement
     from app.models.source import Source
+    from app.models.step import Step
 
 
 class Service(Base, IDMixin, TimestampMixin):
@@ -58,6 +62,25 @@ class Service(Base, IDMixin, TimestampMixin):
     # Relationships
     category: Mapped["Category"] = relationship(back_populates="services")
     primary_source: Mapped["Source | None"] = relationship(back_populates="services")
+
+    requirements: Mapped[list["Requirement"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+        order_by="Requirement.sort_order",
+    )
+    steps: Mapped[list["Step"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+        order_by="Step.step_number",
+    )
+    fees: Mapped[list["Fee"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+    )
+    locations: Mapped[list["Location"]] = relationship(
+        back_populates="service",
+        cascade="all, delete-orphan",
+    )
 
     def __repr__(self) -> str:
         return f"<Service id={self.id} slug={self.slug!r} status={self.status.value}>"
