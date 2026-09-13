@@ -19,7 +19,7 @@ router = APIRouter(prefix="/offices", tags=["offices"])
 async def list_offices(
     db: AsyncSession = Depends(get_db),
     page: int = Query(default=1, ge=1),
-    page_size: int = Query(default=50, ge=1, le=200),
+    page_size: int = Query(default=50, ge=1, le=1000),
     governorate_id: int | None = Query(default=None),
     office_type: OfficeType | None = Query(default=None),
     entity_id: int | None = Query(default=None),

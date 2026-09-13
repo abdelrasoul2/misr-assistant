@@ -19,7 +19,7 @@ router = APIRouter(prefix="/hotlines", tags=["hotlines"])
 async def list_hotlines(
     db: AsyncSession = Depends(get_db),
     page: int = Query(default=1, ge=1),
-    page_size: int = Query(default=50, ge=1, le=200),
+    page_size: int = Query(default=50, ge=1, le=1000),
     hotline_type: HotlineType | None = Query(default=None),
     is_national: bool | None = Query(default=None),
     governorate_id: int | None = Query(default=None),
@@ -64,7 +64,7 @@ async def create_hotline(
 async def list_national_hotlines(
     db: AsyncSession = Depends(get_db),
     page: int = Query(default=1, ge=1),
-    page_size: int = Query(default=100, ge=1, le=200),
+    page_size: int = Query(default=100, ge=1, le=1000),
 ) -> PaginatedResponse[EmergencyHotlineRead]:
     filters = {"is_national": True, "is_active": True}
     total = await crud_hotline.count(db, filters=filters)
