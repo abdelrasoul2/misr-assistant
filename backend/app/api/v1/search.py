@@ -185,3 +185,74 @@ async def suggest(
     suggestions.sort(key=lambda s: len(s.text))
 
     return SuggestResponse(query=q, items=suggestions[:limit])
+
+# ============ AI SEARCH ============
+from app.core.gemini import GeminiError, gemini  # noqa: E402
+from app.schemas.search import AISearchRequest, AISearchResponse  # noqa: E402
+
+
+async def _generate_ai_explanation(
+    query: str,
+    results: list,
+) -> str | None:
+    """Generate an AI explanation for the top search results."""
+    if not gemini.is_configured or not results:
+        return None
+
+    context_parts = []
+    for i, r in enumerate(results[:3], 1):
+        context_parts.append(
+            f"{i}. {r.name}\n"
+            f"   الوصف: {r.description or 'غير متوفر'}\n"
+            f"   الرابط: /services/{r.slug}"
+        )
+    context = "\n".join(context_parts)
+
+    system_instruction = (
+        "أنت مساعد حكومي مصري خبير. مهمتك مساعدة المواطن على فهم "
+        "الخدمات الحكومية المصرية. رد بالعربي الفصيح المبسط، باختصار "
+        "(2-4 جمل)، وبدون مقدمات. استخدم فقط المعلومات المقدمة لك."
+    )
+
+    prompt = (
+        f'سؤال المستخدم: "{query}"\n\n'
+        f"النتائج المتاحة في قاعدة البيانات:\n{context}\n\n"
+        "المطلوب: اكتب فقرة قصيرة (2-4 جمل) تشرح للمستخدم أقرب خدمة لطلبه، "
+        "وتذكره بأهم شيء يحتاج معرفته. لا تخترع معلومات غير موجودة في النتائج."
+    )
+
+    try:
+        text = await gemini.generate(
+            prompt,
+            system_instruction=system_instruction,
+            temperature=0.4,
+            max_output_tokens=400,
+        )
+        return text
+    except GeminiError:
+        return None
+
+
+@router.post("/ai", response_model=AISearchResponse)
+async def search_ai(
+    payload: AISearchRequest,
+    db: AsyncSession = Depends(get_db),
+) -> AISearchResponse:
+    """Hybrid search: rule-based + optional AI explanation."""
+    base = await search_services(q=payload.q, limit=10, db=db)
+
+    ai_explanation = None
+    ai_used = False
+
+    if payload.explain and base.items:
+        ai_explanation = await _generate_ai_explanation(payload.q, base.items)
+        ai_used = ai_explanation is not None
+
+    return AISearchResponse(
+        query=base.query,
+        normalized_query=base.normalized_query,
+        total=base.total,
+        items=base.items,
+        ai_explanation=ai_explanation,
+        ai_used=ai_used,
+    )

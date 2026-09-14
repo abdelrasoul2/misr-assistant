@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Misr Assistant API"
     APP_VERSION: str = "0.1.0"
     APP_ENV: str = "development"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     # --- API ---
     API_V1_PREFIX: str = "/api/v1"
@@ -37,9 +37,14 @@ class Settings(BaseSettings):
     ]
 
     # --- Auth ---
-    SECRET_KEY: str = "CHANGE-ME-IN-PRODUCTION-USE-STRONG-RANDOM-KEY"
+    SECRET_KEY: str = "change-this-to-a-strong-random-key-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+
+    # --- Google Gemini ---
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-3.6-flash"
+    GEMINI_TIMEOUT: int = 30  # seconds
 
 
 @lru_cache

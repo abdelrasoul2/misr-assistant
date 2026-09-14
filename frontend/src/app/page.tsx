@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LandingSearchBox from "@/components/home/LandingSearchBox";
 import AdBanner from "@/components/ads/AdBanner";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -49,20 +50,10 @@ export default function HomePage() {
               اعرف المستندات، الخطوات، الرسوم، والأماكن في مكان واحد
             </p>
             <div className="max-w-2xl mx-auto">
-              <div className="relative">
-                <input type="text" placeholder="اكتب اللي عايز تعمله" className="w-full px-6 py-4 pr-14 rounded-2xl border-2 border-sand-200 bg-white text-base focus:outline-none focus:border-pharaoh-gold" />
-                <button className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-gradient-to-br from-pharaoh-gold-dark to-pharaoh-gold flex items-center justify-center text-white">🔍</button>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
-                <span className="text-gray-500">جرب:</span>
-                <button className="px-3 py-1 rounded-full bg-sand-100 text-gray-700">بطاقتي ضاعت</button>
-                <button className="px-3 py-1 rounded-full bg-sand-100 text-gray-700">عايز أطلع جواز</button>
-                <button className="px-3 py-1 rounded-full bg-sand-100 text-gray-700">عايز أجدد الرخصة</button>
-              </div>
+              <LandingSearchBox />
             </div>
           </div>
         </section>
-
         <AdBanner />
 
         <section className="max-w-6xl mx-auto px-4 py-16">

@@ -63,6 +63,16 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-2">
+            <Link
+              href="/search"
+              className="w-9 h-9 rounded-lg hover:bg-sand-100 flex items-center justify-center transition-colors text-gray-700"
+              aria-label="بحث"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+            </Link>
             {loading ? (
               <div className="w-20 h-8 bg-sand-100 animate-pulse rounded-lg" />
             ) : isAuthenticated && user ? (
