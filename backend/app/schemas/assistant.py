@@ -27,10 +27,20 @@ class SuggestedService(BaseSchema):
     category_id: int
 
 
+class AssistantSource(BaseSchema):
+    """A source cited by the assistant."""
+    name: str
+    url: str | None = None
+    type: str  # "official" | "internal"
+    verified_at: str | None = None
+
+
 class AssistantResponse(BaseSchema):
     """Response from the AI assistant."""
     reply: str
     suggested_services: list[SuggestedService] = Field(default_factory=list)
+    sources: list[AssistantSource] = Field(default_factory=list)
+    intent: str = "service"
     disclaimer: str = (
         "المعلومات للاسترشاد فقط. تحقق دائماً من المصدر الرسمي "
         "قبل الشروع في أي معاملة."

@@ -2,6 +2,7 @@
 from app.schemas.assistant import (
     AssistantRequest,
     AssistantResponse,
+    AssistantSource,
     ChatMessage,
     SuggestedService,
 )

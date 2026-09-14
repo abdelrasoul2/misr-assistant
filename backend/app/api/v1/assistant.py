@@ -5,16 +5,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.assistant_context import (
     ASSISTANT_SYSTEM_INSTRUCTION,
-    build_services_context,
-    build_short_context,
+    build_context_for_intent,
+    classify_intent,
+    truncate_context,
 )
 from app.core.gemini import GeminiError, gemini
 from app.core.text_normalizer import normalize_arabic
 from app.db.session import get_db
 from app.models.service import Service
+from app.models.source import Source
 from app.schemas.assistant import (
     AssistantRequest,
     AssistantResponse,
+    AssistantSource,
     SuggestedService,
 )
 
@@ -27,7 +30,6 @@ async def _find_suggested_services(
     user_message: str,
 ) -> list[SuggestedService]:
     """Find services mentioned in the AI reply."""
-    # ابحث في كل الخدمات عن أسماء ظهرت في الرد
     result = await db.execute(
         select(Service).where(Service.is_active == True)  # noqa: E712
     )
@@ -37,31 +39,84 @@ async def _find_suggested_services(
     user_norm = normalize_arabic(user_message)
     combined = reply_norm + " " + user_norm
 
-    suggested: list[SuggestedService] = []
-    seen_ids: set[int] = set()
+    stopwords = {
+        "في", "من", "على", "الى", "عن", "مع", "هو", "هي",
+        "التي", "الذي", "هذا", "هذه", "ذلك", "كل", "بعض",
+        "او", "أو", "و", "لا", "ما", "ان", "أن", "إن",
+    }
+
+    scored: list[tuple[int, Service]] = []
 
     for svc in services:
-        if svc.id in seen_ids:
-            continue
         svc_name_norm = normalize_arabic(svc.name)
-        # ابحث عن اسم الخدمة ككلمة كاملة أو جزء مهم
-        words = [w for w in svc_name_norm.split() if len(w) > 3]
-        matches = sum(1 for w in words if w in combined)
-        if matches >= 2 or svc_name_norm in combined:
-            suggested.append(
-                SuggestedService(
-                    id=svc.id,
-                    name=svc.name,
-                    slug=svc.slug,
-                    description=svc.description,
-                    category_id=svc.category_id,
-                )
-            )
-            seen_ids.add(svc.id)
-            if len(suggested) >= 3:
-                break
+        words = [
+            w for w in svc_name_norm.split()
+            if len(w) >= 3 and w not in stopwords
+        ]
 
-    return suggested
+        score = 0
+        if svc_name_norm in combined:
+            score += 100
+        matches = sum(1 for w in words if w in combined)
+        score += matches * 10
+        if words and matches / len(words) >= 0.5:
+            score += 20
+
+        if score > 0:
+            scored.append((score, svc))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+
+    return [
+        SuggestedService(
+            id=svc.id,
+            name=svc.name,
+            slug=svc.slug,
+            description=svc.description,
+            category_id=svc.category_id,
+        )
+        for _, svc in scored[:3]
+    ]
+
+
+async def _collect_sources(
+    db: AsyncSession,
+    suggested_services: list[SuggestedService],
+) -> list[AssistantSource]:
+    """Collect official sources from suggested services."""
+    if not suggested_services:
+        return []
+
+    service_ids = [s.id for s in suggested_services]
+    result = await db.execute(
+        select(Service)
+        .where(Service.id.in_(service_ids))
+        .where(Service.primary_source_id.is_not(None))
+    )
+    services_with_sources = result.scalars().all()
+
+    source_ids = {
+        s.primary_source_id
+        for s in services_with_sources
+        if s.primary_source_id
+    }
+    if not source_ids:
+        return []
+
+    src_result = await db.execute(
+        select(Source).where(Source.id.in_(source_ids))
+    )
+    sources = src_result.scalars().all()
+
+    return [
+        AssistantSource(
+            name=src.name,
+            url=src.url,
+            type="official" if src.official else "internal",
+            verified_at=src.verified_at.isoformat() if src.verified_at else None,
+        )
+        for src in sources
+    ]
 
 
 @router.post("/chat", response_model=AssistantResponse)
@@ -76,31 +131,35 @@ async def assistant_chat(
             detail="AI assistant is not configured (missing GEMINI_API_KEY)",
         )
 
-    # 1) ابني context من الخدمات
-    services_context = await build_services_context(db, max_services=20)
-    services_context = build_short_context(services_context, max_chars=12000)
+    # 1) Classify intent
+    intent = classify_intent(payload.message)
 
-    # 2) ابني الـ prompt
+    # 2) Build context based on intent
+    context, intent_label = await build_context_for_intent(db, intent)
+    context = truncate_context(context, max_chars=14000)
+
+    # 3) Build prompt
     history_lines = []
-    for msg in payload.history[-6:]:  # آخر 6 رسائل فقط
+    for msg in payload.history[-6:]:
         role = "المستخدم" if msg.role == "user" else "المساعد"
         history_lines.append(f"{role}: {msg.content}")
     history_text = "\n".join(history_lines) if history_lines else "(لا يوجد سجل)"
 
     prompt = (
-        f"السياق (قائمة الخدمات المتاحة):\n{services_context}\n\n"
+        f"نوع السؤال: {intent_label}\n\n"
+        f"السياق (المعلومات المتاحة):\n{context}\n\n"
         f"سجل المحادثة السابق:\n{history_text}\n\n"
         f"رسالة المستخدم الحالية:\n{payload.message}\n\n"
         "المطلوب:\n"
         "1. اكتب رداً واضحاً لا يقل عن 4 جمل.\n"
-        "2. اذكر اسم الخدمة الكامل من السياق بشكل صريح.\n"
-        "3. اذكر المستندات المطلوبة كقائمة.\n"
+        "2. إذا ذكرت خدمة، اذكر اسمها الكامل من السياق.\n"
+        "3. اذكر المستندات كقائمة مرقمة إن وُجدت.\n"
         "4. اذكر الرسوم إن وُجدت.\n"
         "5. اختم بجملة عن الخطوة التالية.\n"
         "لا تخترع خدمات أو معلومات غير موجودة في السياق."
     )
 
-    # 3) اتصل بـ Gemini
+    # 4) Gemini call
     try:
         reply = await gemini.generate(
             prompt,
@@ -117,10 +176,15 @@ async def assistant_chat(
     if not reply:
         reply = "عذراً، لم أستطع توليد رد. جرّب مرة أخرى."
 
-    # 4) اقترح خدمات
+    # 5) Suggested services
     suggested = await _find_suggested_services(db, reply, payload.message)
+
+    # 6) Collect sources
+    sources = await _collect_sources(db, suggested)
 
     return AssistantResponse(
         reply=reply,
         suggested_services=suggested,
+        sources=sources,
+        intent=intent_label,
     )
