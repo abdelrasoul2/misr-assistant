@@ -77,3 +77,7 @@ _smoke_test.*
 _temp.*
 _scratch.*
 *.tmp
+
+# ===== Local secrets (DO NOT COMMIT) =====
+neon-url.txt
+secret-key.txt

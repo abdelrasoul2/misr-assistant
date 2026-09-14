@@ -6,6 +6,8 @@ pydantic>=2.9.0
 pydantic-settings>=2.5.0
 python-dotenv>=1.0.1
 aiosqlite>=0.20.0
+asyncpg>=0.30.0
+greenlet>=3.1.0
 
 # Auth
 python-jose[cryptography]>=3.5.0
@@ -14,7 +16,9 @@ bcrypt<4.0
 python-multipart>=0.0.32
 email-validator>=2.2.0
 
-# Dev/testing
+# HTTP client (Gemini)
 httpx>=0.28.0
+
+# Dev/testing (لتشغيل الـ seed scripts)
 pytest>=8.3.0
 pytest-asyncio>=0.24.0
