@@ -51,6 +51,12 @@ from app.schemas.sector import (
     SectorRead,
     SectorUpdate,
 )
+from app.schemas.search import (
+    SearchResponse,
+    SearchResultItem,
+    SuggestItem,
+    SuggestResponse,
+)
 from app.schemas.source import (
     SourceBase,
     SourceCreate,

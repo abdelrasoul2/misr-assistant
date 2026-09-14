@@ -10,6 +10,7 @@ from app.api.v1 import (
     health,
     hotlines,
     offices,
+    search,
     sectors,
     service_nested,
     services,
@@ -44,6 +45,7 @@ app.include_router(offices.router, prefix=settings.API_V1_PREFIX)
 app.include_router(hotlines.router, prefix=settings.API_V1_PREFIX)
 app.include_router(services.router, prefix=settings.API_V1_PREFIX)
 app.include_router(service_nested.router, prefix=settings.API_V1_PREFIX)
+app.include_router(search.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/", tags=["root"])
