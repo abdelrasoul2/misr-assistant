@@ -6,8 +6,27 @@ import json
 from functools import lru_cache
 from typing import Any
 
-from pydantic import field_validator
+from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _parse_cors(value: Any) -> list[str]:
+    """Accept JSON array, comma-separated string, or list."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        v = value.strip()
+        if not v:
+            return []
+        if v.startswith("["):
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                pass
+        return [item.strip().strip('"').strip("'") for item in v.split(",") if item.strip()]
+    return list(value)
 
 
 class Settings(BaseSettings):
@@ -32,34 +51,17 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite+aiosqlite:///./misr_assistant.db"
 
     # --- CORS ---
-    CORS_ORIGINS: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ]
+    # Stored as raw string from env (JSON or comma-separated).
+    CORS_ORIGINS: str = (
+        "http://localhost:3000,http://localhost:5173,"
+        "http://127.0.0.1:3000,http://127.0.0.1:5173"
+    )
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v: Any) -> list[str]:
-        """Accept JSON array, comma-separated string, or list."""
-        if v is None:
-            return []
-        if isinstance(v, list):
-            return v
-        if isinstance(v, str):
-            v = v.strip()
-            if not v:
-                return []
-            # JSON array
-            if v.startswith("["):
-                try:
-                    return json.loads(v)
-                except json.JSONDecodeError:
-                    pass
-            # comma-separated
-            return [item.strip().strip('"').strip("'") for item in v.split(",") if item.strip()]
-        return v
+    @computed_field  # type: ignore[misc]
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parsed CORS origins as a list."""
+        return _parse_cors(self.CORS_ORIGINS)
 
     # --- Auth ---
     SECRET_KEY: str = "change-this-to-a-strong-random-key-in-production"
