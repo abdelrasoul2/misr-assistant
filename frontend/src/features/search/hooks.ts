@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { searchServices, suggestSearch } from "./api";
-import type { SearchResponse, SuggestResponse } from "./types";
+import {
+  searchServices,
+  searchServicesAI,
+  suggestSearch,
+} from "./api";
+import type {
+  AISearchResponse,
+  SearchResponse,
+  SuggestResponse,
+} from "./types";
 
 export function useSearch(query: string, enabled: boolean = true) {
   const [data, setData] = useState<SearchResponse | null>(null);
@@ -36,6 +44,48 @@ export function useSearch(query: string, enabled: boolean = true) {
           }
         });
     }, 250);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, enabled]);
+
+  return { data, isLoading, isError };
+}
+
+export function useAISearch(query: string, enabled: boolean = true) {
+  const [data, setData] = useState<AISearchResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    if (!enabled || !query.trim()) {
+      setData(null);
+      setIsLoading(false);
+      setIsError(false);
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+    setIsError(false);
+
+    const timer = setTimeout(() => {
+      searchServicesAI(query, true)
+        .then((res) => {
+          if (!cancelled) {
+            setData(res);
+            setIsLoading(false);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setIsError(true);
+            setIsLoading(false);
+          }
+        });
+    }, 500);
 
     return () => {
       cancelled = true;

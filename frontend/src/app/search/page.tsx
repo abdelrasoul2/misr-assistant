@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import PharaohPattern from "@/components/patterns/PharaohPattern";
-import { useSearch, useSuggestions } from "@/features/search/hooks";
+import { useAISearch, useSuggestions } from "@/features/search/hooks";
 import { CATEGORY_ICONS } from "@/features/services/types";
 
 const CATEGORY_LABELS: Record<number, string> = {
@@ -53,7 +53,7 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [input, ready]);
 
-  const { data, isLoading, isError } = useSearch(debounced, debounced.length > 0);
+  const { data, isLoading, isError } = useAISearch(debounced, debounced.length > 0);
   const suggestions = useSuggestions(input);
 
   return (
@@ -74,8 +74,11 @@ export default function SearchPage() {
                   ابحث عن أي خدمة
                 </span>
               </h1>
-              <p className="text-gray-500 text-sm">
-                اكتب بلغتك — المنصة تفهمك
+              <p className="text-gray-500 text-sm flex items-center justify-center gap-2 flex-wrap">
+                <span className="inline-flex items-center gap-1 text-[10px] bg-gradient-to-l from-pharaoh-gold/20 to-pharaoh-gold/10 text-pharaoh-gold-dark border border-pharaoh-gold/30 px-2 py-0.5 rounded-full font-semibold">
+                  ✨ مدعوم بـ AI
+                </span>
+                <span>اكتب بلغتك — المنصة تفهمك</span>
               </p>
             </div>
 
@@ -139,7 +142,7 @@ export default function SearchPage() {
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
                   <div className="w-10 h-10 border-4 border-egypt-red border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                  <p className="text-gray-500 text-sm">جاري البحث...</p>
+                  <p className="text-gray-500 text-sm">جاري البحث والتحليل...</p>
                 </div>
               </div>
             )}
@@ -148,6 +151,37 @@ export default function SearchPage() {
               <div className="text-center py-12 bg-white rounded-2xl border border-red-200">
                 <div className="text-4xl mb-3">⚠️</div>
                 <p className="text-egypt-red font-semibold mb-2">حدث خطأ في البحث</p>
+              </div>
+            )}
+
+            {!isLoading && !isError && data && data.ai_explanation && (
+              <div className="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-pharaoh-gold/10 via-sand-50 to-white border-2 border-pharaoh-gold/40 shadow-md">
+                <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-egypt-red via-pharaoh-gold to-egypt-black" />
+
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pharaoh-gold to-pharaoh-gold-dark flex items-center justify-center text-xl shadow-sm">
+                      ✨
+                    </div>
+                    <div>
+                      <div className="font-display font-bold text-lg text-egypt-black">
+                        شرح ذكي
+                      </div>
+                      <div className="text-[10px] text-pharaoh-gold-dark font-semibold tracking-wide">
+                        مدعوم بـ Google Gemini
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-800 leading-relaxed text-sm whitespace-pre-wrap">
+                    {data.ai_explanation}
+                  </p>
+
+                  <div className="mt-4 pt-4 border-t border-pharaoh-gold/20 flex items-start gap-2 text-xs text-gray-500">
+                    <span className="text-base leading-none">⚠️</span>
+                    <span>{data.disclaimer}</span>
+                  </div>
+                </div>
               </div>
             )}
 

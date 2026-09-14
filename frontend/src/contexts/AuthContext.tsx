@@ -47,7 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const me = await getMe();
       setUser(me);
-    } catch {
+    } catch (err: unknown) {
+      // 401 = token expired/invalid → just logout silently
+      // any other error → logout too, but don't crash
+      const anyErr = err as { response?: { status?: number } };
+      if (anyErr?.response?.status !== 401) {
+        console.warn("Auth check failed:", anyErr?.response?.status);
+      }
       apiLogout();
       setUser(null);
     } finally {

@@ -16,24 +16,25 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Ignore canceled requests (React Strict Mode double-invokes in dev)
-    if (axios.isCancel(error)) {
+    if (axios.isCancel(error) || error?.code === "ERR_CANCELED") {
       return Promise.reject(error);
     }
 
-    // Ignore network aborts
-    if (error?.code === "ERR_CANCELED") {
+    // Silently ignore 401 from /auth/me (guest users)
+    const url = error?.config?.url as string | undefined;
+    const status = error?.response?.status;
+
+    if (status === 401 && url?.includes("/auth/me")) {
       return Promise.reject(error);
     }
 
-    // Log only real errors (with a response OR a clear message)
-    if (typeof window !== "undefined") {
-      const url = error?.config?.url;
-      const status = error?.response?.status;
-      const message = error?.message;
-      // Only log if we have useful info
-      if (url || status || message) {
-        console.error("[API Error]", { url, status, message });
-      }
+    // Log other real HTTP errors
+    if (typeof window !== "undefined" && status) {
+      console.error("[API Error]", {
+        url,
+        status,
+        detail: error.response?.data?.detail,
+      });
     }
     return Promise.reject(error);
   }

@@ -16,6 +16,12 @@ export interface SearchResponse {
   items: SearchResultItem[];
 }
 
+export interface AISearchResponse extends SearchResponse {
+  ai_explanation: string | null;
+  ai_used: boolean;
+  disclaimer: string;
+}
+
 export interface SuggestItem {
   text: string;
   type: "service" | "alias";

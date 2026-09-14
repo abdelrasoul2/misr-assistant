@@ -1,5 +1,9 @@
 import { api } from "@/lib/api";
-import type { SearchResponse, SuggestResponse } from "./types";
+import type {
+  AISearchResponse,
+  SearchResponse,
+  SuggestResponse,
+} from "./types";
 
 export async function searchServices(
   q: string,
@@ -7,6 +11,17 @@ export async function searchServices(
 ): Promise<SearchResponse> {
   const { data } = await api.get<SearchResponse>("/search", {
     params: { q, limit },
+  });
+  return data;
+}
+
+export async function searchServicesAI(
+  q: string,
+  explain: boolean = true
+): Promise<AISearchResponse> {
+  const { data } = await api.post<AISearchResponse>("/search/ai", {
+    q,
+    explain,
   });
   return data;
 }
