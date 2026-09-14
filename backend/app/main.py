@@ -11,6 +11,8 @@ from app.api.v1 import (
     hotlines,
     offices,
     sectors,
+    service_nested,
+    services,
     sources,
 )
 from app.core.config import settings
@@ -40,6 +42,8 @@ app.include_router(governorates.router, prefix=settings.API_V1_PREFIX)
 app.include_router(entities.router, prefix=settings.API_V1_PREFIX)
 app.include_router(offices.router, prefix=settings.API_V1_PREFIX)
 app.include_router(hotlines.router, prefix=settings.API_V1_PREFIX)
+app.include_router(services.router, prefix=settings.API_V1_PREFIX)
+app.include_router(service_nested.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/", tags=["root"])

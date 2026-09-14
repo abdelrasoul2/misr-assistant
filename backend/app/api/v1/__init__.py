@@ -8,6 +8,8 @@ from app.api.v1 import (
     hotlines,
     offices,
     sectors,
+    service_nested,
+    services,
     sources,
 )
 
@@ -20,5 +22,7 @@ __all__ = [
     "hotlines",
     "offices",
     "sectors",
+    "service_nested",
+    "services",
     "sources",
 ]
