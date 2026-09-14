@@ -1,6 +1,6 @@
 # ===== Misr Assistant Backend — Fly.io Configuration =====
 app = "misr-assistant-api"
-primary_region = "cdg"   # Paris (closest to Egypt with good latency)
+primary_region = "cdg"   # Paris
 
 [build]
   dockerfile = "Dockerfile"
@@ -26,15 +26,15 @@ primary_region = "cdg"   # Paris (closest to Egypt with good latency)
     hard_limit = 250
     soft_limit = 200
 
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/v1/health"
+
 [[vm]]
   size = "shared-cpu-1x"
   memory = "512mb"
   cpu_kind = "shared"
   cpus = 1
-
-[checks.health]
-  interval = "30s"
-  timeout = "5s"
-  grace_period = "10s"
-  method = "GET"
-  path = "/api/v1/health"
