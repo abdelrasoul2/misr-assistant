@@ -1,4 +1,10 @@
 """Pydantic schemas for the Misr Assistant API."""
+from app.schemas.assistant import (
+    AssistantRequest,
+    AssistantResponse,
+    ChatMessage,
+    SuggestedService,
+)
 from app.schemas.auth import (
     Token,
     TokenWithUser,

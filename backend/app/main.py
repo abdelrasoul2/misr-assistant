@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import (
+    assistant,
     auth,
     categories,
     entities,
@@ -46,6 +47,7 @@ app.include_router(hotlines.router, prefix=settings.API_V1_PREFIX)
 app.include_router(services.router, prefix=settings.API_V1_PREFIX)
 app.include_router(service_nested.router, prefix=settings.API_V1_PREFIX)
 app.include_router(search.router, prefix=settings.API_V1_PREFIX)
+app.include_router(assistant.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/", tags=["root"])
