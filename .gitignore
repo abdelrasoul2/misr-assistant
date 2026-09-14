@@ -81,3 +81,5 @@ _scratch.*
 # ===== Local secrets (DO NOT COMMIT) =====
 neon-url.txt
 secret-key.txt
+
+.env.local
